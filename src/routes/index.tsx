@@ -26,7 +26,7 @@ export default component$(() => {
       <div class="container container-flex">
         <Infobox>
           <div q:slot="title" class="icon icon-cli">
-            CLI Commands Fernando
+            CLI Commands Fernando 3
           </div>
           <>
             <p>
