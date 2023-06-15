@@ -2,9 +2,9 @@ import { component$, useSignal, useTask$ } from '@builder.io/qwik';
 import { Interface } from 'readline';
 
 interface Props {
-  id: number;
+  id: number | string;
   size?: number;
-  backImage: boolean;
+  backImage?: boolean;
   isVisible?: boolean;
 }
 
