@@ -2,9 +2,13 @@ import { component$ } from '@builder.io/qwik';
 import { DocumentHead } from '@builder.io/qwik-city';
 
 export default component$(() => {
-  return <div>List Client!</div>;
+  return (
+    <>
+      <span class="text-5xl">Pokemon: </span>
+    </>
+  );
 });
 
 export const head: DocumentHead = {
-  title: 'List client',
+  title: 'Pokemon',
 };
