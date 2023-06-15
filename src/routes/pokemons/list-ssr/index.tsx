@@ -16,16 +16,14 @@ export const usePokemonList = routeLoader$<BasicPokemonInfo[]>(async() => {
 export default component$(() => {
 
   const pokemons = usePokemonList();
-
   const location = useLocation();
 
   const currentOffset = useComputed$<number>(() => {
-    const offsetString = new URLSearchParams( location.url.search);
-    return Number(offsetString.get('offset') || 0);
+    const offsetString = location.url.searchParams.get('offset');
+    //const offsetString = new URLSearchParams( location.url.search);
+    //return Number(offsetString.get('offset') || 0);
+    return Number(offsetString || 0);
   })
-
-
-
 
   return (
     <>
