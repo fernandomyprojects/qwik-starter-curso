@@ -1,15 +1,16 @@
 import { component$, useComputed$ } from '@builder.io/qwik';
 import { type DocumentHead, Link, routeLoader$, useLocation } from '@builder.io/qwik-city';
-import { URLSearchParams } from 'url';
-import { BasicPokemonInfo, PokemonListResponse } from '~/interfaces/pokemon-list.response';
+import { PokemonImage } from '~/components/pokemons/pokemon-image';
+import { getSmallPokemons } from '~/helpers/get-small-pokemons';
+import { SmallPokemon } from '~/interfaces';
 
-export const usePokemonList = routeLoader$<BasicPokemonInfo[]>(async() => {
+export const usePokemonList = routeLoader$<SmallPokemon[]>(async({query, redirect, pathname}) => {
 
-  const resp = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=10&offset=10`);
+  const offset = Number(query.get('offset') || '0');
+  if ( isNaN(offset)) redirect(301, pathname);
+  if ( offset < 0) redirect(301, pathname);
 
-  const data = await resp.json() as PokemonListResponse;
-
-  return data.results;
+  return await getSmallPokemons(offset);
 
 });
 
@@ -20,8 +21,6 @@ export default component$(() => {
 
   const currentOffset = useComputed$<number>(() => {
     const offsetString = location.url.searchParams.get('offset');
-    //const offsetString = new URLSearchParams( location.url.search);
-    //return Number(offsetString.get('offset') || 0);
     return Number(offsetString || 0);
   })
 
@@ -30,7 +29,7 @@ export default component$(() => {
       <div class="flex flex-col">
         <span class="my-5 text-5xl">Status</span>
         <span>Offset: {currentOffset}</span>
-        <span>Está cargando página: xxx</span>
+        <span>Está cargando página: {location.isNavigating ? 'Si' : 'No'}</span>
       </div>
 
       <div class="mt-10">
@@ -45,10 +44,11 @@ export default component$(() => {
         </Link>
       </div>
 
-      <div class="grid grid-cols-6 mt-5">
+      <div class="grid grid-cols-5 mt-5">
         {
-          pokemons.value.map( ({name}) => (
+          pokemons.value.map( ({name, id}) => (
             <div key={name} class="m-5 flex flex-col justify-center items-center">
+              <PokemonImage id={id} />
               <span class="capitalize">{name}</span>
             </div>
           ))

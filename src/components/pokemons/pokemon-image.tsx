@@ -1,4 +1,9 @@
-import { component$, useSignal, useTask$ } from '@builder.io/qwik';
+import {
+  component$,
+  useComputed$,
+  useSignal,
+  useTask$,
+} from '@builder.io/qwik';
 import { Interface } from 'readline';
 
 interface Props {
@@ -17,7 +22,14 @@ export const PokemonImage = component$(
       imageLoaded.value = false;
     });
 
-    const path: string = backImage ? '/back' : '';
+    const pathPokeApi =
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon';
+
+    const imageUrl = useComputed$(() => {
+      return backImage
+        ? `${pathPokeApi}/back/${id}.png`
+        : `${pathPokeApi}/${id}.png`;
+    });
 
     return (
       <div
@@ -26,7 +38,7 @@ export const PokemonImage = component$(
       >
         {!imageLoaded.value && <span>Cargando...</span>}
         <img
-          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon${path}/${id}.png`}
+          src={imageUrl.value}
           alt="Pokemon Sprite"
           style={{ width: `${size}px` }}
           onLoad$={() => (imageLoaded.value = true)}
